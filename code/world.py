@@ -36,6 +36,7 @@ all_models  = ['mf', 'lgn']
 config['bpr_batch_size'] = args.bpr_batch
 config['latent_dim_rec'] = args.recdim
 config['lightGCN_n_layers']= args.layer
+config['readout'] = args.readout
 config['dropout'] = args.dropout
 config['keep_prob']  = args.keepprob
 config['A_n_fold'] = args.a_fold

@@ -156,7 +156,7 @@ class LastFM(BasicDataset):
             index = dense.nonzero()
             data  = dense[dense >= 1e-9]
             assert len(index) == len(data)
-            self.Graph = torch.sparse.FloatTensor(index.t(), data, torch.Size([self.n_users+self.m_items, self.n_users+self.m_items]))
+            self.Graph = torch.sparse_coo_tensor(index.t(), data, torch.Size([self.n_users+self.m_items, self.n_users+self.m_items]))
             self.Graph = self.Graph.coalesce().to(world.device)
         return self.Graph
 
@@ -327,7 +327,7 @@ class Loader(BasicDataset):
         col = torch.Tensor(coo.col).long()
         index = torch.stack([row, col])
         data = torch.FloatTensor(coo.data)
-        return torch.sparse.FloatTensor(index, data, torch.Size(coo.shape))
+        return torch.sparse_coo_tensor(index, data, torch.Size(coo.shape))
         
     def getSparseGraph(self):
         print("loading adjacency matrix")

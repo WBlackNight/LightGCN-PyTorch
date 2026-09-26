@@ -125,7 +125,7 @@ class LightGCN(BasicModel):
         random_index = random_index.int().bool()
         index = index[random_index]
         values = values[random_index]/keep_prob
-        g = torch.sparse.FloatTensor(index.t(), values, size)
+        g = torch.sparse_coo_tensor(index.t(), values, size)
         return g
     
     def __dropout(self, keep_prob):
@@ -167,7 +167,10 @@ class LightGCN(BasicModel):
             embs.append(all_emb)
         embs = torch.stack(embs, dim=1)
         #print(embs.size())
-        light_out = torch.mean(embs, dim=1)
+        if self.config['readout'] == 'last':
+            light_out = embs[:, -1, :]
+        else:
+            light_out = torch.mean(embs, dim=1)
         users, items = torch.split(light_out, [self.num_users, self.num_items])
         return users, items
     
